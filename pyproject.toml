@@ -23,4 +23,4 @@ classifiers = [
 "Homepage" = "https://github.com/nummulith/drawing"
 
 [tool.setuptools_scm]
-write_to = "src/drawing/_version.py"
+write_to = "src/_version.py"
