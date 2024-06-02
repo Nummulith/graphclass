@@ -14,16 +14,13 @@ jobs:
 
     steps:
 
-    - name: hello
-      run: echo "hello world"
+    - name: Check out code
+      uses: actions/checkout@v2
 
-    # - name: Check out code
-    #   uses: actions/checkout@v2
-
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: '3.x'  # Укажите версию Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
     # - name: Install dependencies
     #   run: pip install setuptools wheel twine
