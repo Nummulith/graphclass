@@ -7,7 +7,7 @@
             <h1>Graph Drawing Utility</h1>
         </th>
         <th>
-            <img src="https://github.com/nummulith/drawing/raw/main/doc/Graph_Drawing_Utility.png" width="100" height="100">
+            <img src="https://raw.githubusercontent.com/Nummulith/drawing/main/doc/logo.png" width="100" height="100">
         </th>
     </tr>
   </thead>
@@ -33,6 +33,6 @@ The utility enables users to visualize the constructed object graph, providing a
 
 ## Example
 
-[Source code](https://github.com/nummulith/drawing/raw/main/doc/GraphDemo.py)
+[Source code](https://raw.githubusercontent.com/Nummulith/drawing/main/doc/GraphDemo.py)
 
-<img src="https://github.com/nummulith/drawing/raw/main/doc/Graph-Demo.png">
+<img src="https://raw.githubusercontent.com/Nummulith/drawing/main/doc/GraphDemo.png">
