@@ -31,6 +31,9 @@ jobs:
     - name: Build package
       run: python3 -m build
 
+    - name: LS
+      run: ls -R
+
     - name: Publish package to PyPI
       env:
         TWINE_USERNAME: __token__
