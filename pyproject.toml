@@ -21,3 +21,6 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/nummulith/drawing"
+
+[tool.setuptools_scm]
+write_to = "drawing/_version.py"
