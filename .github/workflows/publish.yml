@@ -34,6 +34,9 @@ jobs:
     - name: LS
       run: ls -R
 
+    - name: cat
+      run: cat src/drawing/_version.py
+
     - name: Publish package to PyPI
       env:
         TWINE_USERNAME: __token__
