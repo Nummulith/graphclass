@@ -2,8 +2,8 @@ name: Publish Python Package
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     tags:
        - 'v*.*.*'
 
@@ -22,8 +22,8 @@ jobs:
       with:
         python-version: '3.x'
 
-    # - name: Install dependencies
-    #   run: pip install setuptools wheel twine
+    - name: Install dependencies
+      run: pip install setuptools wheel twine
 
     # - name: Build package
     #   run: python setup.py sdist bdist_wheel
