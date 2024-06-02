@@ -2,30 +2,37 @@ name: Publish Python Package
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  # Триггер на тегах версий
+    branches:
+      - main
+    # tags:
+    #   - 'v*.*.*'  # Триггер на тегах версий
 
 jobs:
   publish:
+      
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'  # Укажите версию Python
+    - name: hello
+      uses: echo "hello world"
 
-    - name: Install dependencies
-      run: pip install setuptools wheel twine
+    # - name: Check out code
+    #   uses: actions/checkout@v2
 
-    - name: Build package
-      run: python setup.py sdist bdist_wheel
+    # - name: Set up Python
+    #   uses: actions/setup-python@v2
+    #   with:
+    #     python-version: '3.x'  # Укажите версию Python
 
-    - name: Publish package to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
+    # - name: Install dependencies
+    #   run: pip install setuptools wheel twine
+
+    # - name: Build package
+    #   run: python setup.py sdist bdist_wheel
+
+    # - name: Publish package to PyPI
+    #   env:
+    #     TWINE_USERNAME: __token__
+    #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+    #   run: twine upload dist/*
