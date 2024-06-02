@@ -23,7 +23,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install build twine wheel setuptools-scm 
+      run: pip install build twine wheel setuptools_scm
 
     # - name: Install build
     #   run: python3 -m pip install --upgrade build
