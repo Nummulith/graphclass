@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nummulith_drawing"
-version = "0.0.1"
+# version = "0.0.0"
+dynamic = ["version"]
 description = "Drawing graphs by graphviz with class approach"
 readme = "README.md"
 requires-python = ">=3.8"
