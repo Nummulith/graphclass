@@ -3,8 +3,7 @@ requires = ["setuptools>=61.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "nummulith_drawing"
-# version = "0.0.0"
+name = "graphclass"
 dynamic = ["version"]
 description = "Drawing graphs by graphviz with class approach"
 readme = "README.md"

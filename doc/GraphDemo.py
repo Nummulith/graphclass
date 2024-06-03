@@ -1,4 +1,4 @@
-from Drawing.Drawing import Drawing
+from graphclass import Drawing
 
 drawing = Drawing()
 
