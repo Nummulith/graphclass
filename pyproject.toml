@@ -24,3 +24,6 @@ classifiers = [
 
 [tool.setuptools_scm]
 write_to = "src/graphclass/_version.py"
+
+[tool.setuptools]
+package-data = { "template": ["template/html.j2"] }

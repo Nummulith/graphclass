@@ -59,5 +59,6 @@ drawing.add_link("Products:id", "OrderDetails:product_id")
 drawing.add_link("Orders:id", "OrderDetails:order_id")
 drawing.add_link("Employees:id", "Departments:manager_id")
 
-draw = drawing.draw("GraphDemo")
-print(draw)
+res = drawing.html("Demo")
+with open('./Demo.html', 'w') as file:
+    file.write(res)

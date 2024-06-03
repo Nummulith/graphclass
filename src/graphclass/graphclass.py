@@ -22,7 +22,15 @@ Author: Pavel ERESKO
 """
 
 
-from graphviz import Digraph
+from graphviz import Digraph, Source
+
+from jinja2 import Template
+
+import importlib.resources
+
+def get_resource_path(path, file):
+    with importlib.resources.path(path, file) as res_path:
+        return str(res_path)
 
 class Drawing:
     ''' Class that provide drawing structure of nodes with parent, list, and links relations '''
@@ -133,8 +141,7 @@ class Drawing:
             if par_context is not None:
                 par_context.__exit__(None, None, None)
 
-
-    def draw(self, name):
+    def dot(self, name):
         ''' Draws the structure of nodes with all the relations '''
         dot = Digraph(name)
 
@@ -152,7 +159,13 @@ class Drawing:
 
         # with open('Y3A\\render\\Y3A.txt', 'w') as file:
         #     file.write(dot.source)
+        return dot
+    
+    def source(self, name):
+        return self.dot(name).source
 
+    def svg(self, name):
+        dot = self.dot(name)
 
         try:
             # dot.render(name, format='png', cleanup=True)
@@ -171,3 +184,19 @@ class Drawing:
         svg_str = '\n'.join(svg_str.split('\n')[3:])
 
         return svg_str
+
+    def html(self, name):
+        svg_str = self.svg(name)
+
+        path = get_resource_path('graphclass.template', 'html.j2')
+        with open(path, 'r') as file:
+            template_str = file.read()
+        template = Template(template_str)
+
+        output = template.render(content=svg_str)
+        return output
+
+    def png(self, name, png_path):
+        svg_content = self.svg(name)
+        graph = Source(svg_content, format='png')
+        graph.render(filename=png_path, cleanup=True)
