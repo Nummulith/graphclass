@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/nummulith/drawing"
+"Homepage" = "https://github.com/nummulith/graphclass"
 
 [tool.setuptools_scm]
-write_to = "src/drawing/_version.py"
+write_to = "src/graphclass/_version.py"
