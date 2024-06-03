@@ -150,8 +150,8 @@ class Drawing:
         self.linked = None
 
 
-        with open('Y3A\\render\\Y3A.txt', 'w') as file:
-            file.write(dot.source)
+        # with open('Y3A\\render\\Y3A.txt', 'w') as file:
+        #     file.write(dot.source)
 
 
         try:
