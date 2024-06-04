@@ -61,5 +61,5 @@ drawing.add_link("Employees:id", "Departments:manager_id")
 
 res = drawing.html("Demo")
 
-with open('./Demo.html', 'w') as file:
+with open('./src/Demo/Demo.html', 'w') as file:
     file.write(res)
