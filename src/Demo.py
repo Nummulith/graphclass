@@ -60,5 +60,6 @@ drawing.add_link("Orders:id", "OrderDetails:order_id")
 drawing.add_link("Employees:id", "Departments:manager_id")
 
 res = drawing.html("Demo")
+
 with open('./Demo.html', 'w') as file:
     file.write(res)
