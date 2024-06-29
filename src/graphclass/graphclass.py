@@ -176,6 +176,8 @@ class Drawing:
             #Graph.scene().addItem(pixmap_item)
             #Graph.fitInView(Graph.scene().sceneRect()) # Autoscaling
 
+            dot.engine = 'fdp'
+
             svg_str = dot.pipe(format='svg').decode('utf-8')
         except Exception as e:
             print(f"Draw error: {str(e)}")
