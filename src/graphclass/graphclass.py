@@ -22,15 +22,220 @@ Author: Pavel ERESKO
 """
 
 
+
 from graphviz import Digraph, Source
 
 from jinja2 import Template
 
 import importlib.resources
 
+def insert_line_breaks(text, interval = 40):
+    lines = text.split('\n')
+    result = []
+
+    for line in lines:
+        words = line.split()
+        current_line = ""
+        current_length = 0
+
+        for word in words:
+            if current_length + len(word) + 1 > interval and len(result) > 0:
+                result.append(current_line)
+                current_line = word
+                current_length = len(word)
+            else:
+                if current_line:
+                    current_line += " "
+                current_line += word
+                current_length += len(word) + 1
+
+        result.append(current_line)
+        result.append("")
+
+    if result and result[-1] == "":
+        result.pop()
+
+    return "<br/>".join(result)
+
+def simple_node_label(text):
+    ''' html code for cluster header '''
+    return f'''<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+            <TR>
+                <TD><B>{text}</B></TD>
+            </TR>
+        </TABLE>
+    >'''
+
+def simple_list_label(listname, listitems):
+    label = f'<TR><TD BGCOLOR="#A9DFBF"><B>{listname}</B></TD></TR>\n'
+    for listitem in listitems:
+        label += f'<TR><TD BGCOLOR="white" PORT="{listitem}"><FONT POINT-SIZE="12.0">{listitem}</FONT></TD></TR>\n'
+
+    label = f'''<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+        {label}
+        </TABLE>
+    >'''
+
+    return label
+
+def node_label(obj, DRAW):
+    ''' html code for node '''
+    draw  = type(obj).Draw
+    color = type(obj).Color
+
+    res = ""
+    if draw & DRAW.VIEW:
+        val = obj.get_view()
+        if val:
+            res = res + f'''
+                <TR>
+                    <TD {obj.get_href()} BGCOLOR="{color}" PORT="p0"><B>{insert_line_breaks(val)}</B></TD>
+                </TR>
+            '''
+    if draw & DRAW.EXT:
+        val = obj.get_ext()
+        if val:
+            res = res + f'''
+                <TR>
+                    <TD BGCOLOR="white" PORT="p1"><FONT POINT-SIZE="12.0">{insert_line_breaks(val)}</FONT></TD>
+                </TR>
+            '''
+    if draw & DRAW.ICON:
+        val = obj.get_icon()
+        if val:
+            res = res + f'''
+                <TR>
+                    <TD BGCOLOR="white" PORT="p2"><IMG SRC="{val}"/></TD>
+                </TR>
+            '''
+    if draw & DRAW.CLASS:
+        val = obj.get_class_view()
+        if val:
+            res = res + f'''
+                <TR>
+                    <TD BGCOLOR="white" PORT="p4"><FONT POINT-SIZE="8.0">{val}</FONT></TD>
+                </TR>
+            '''
+    if draw & DRAW.ID:
+        val = obj.get_id()
+        if val:
+            res = res + f'''
+                <TR>
+                    <TD BGCOLOR="{color}" PORT="p3"><FONT POINT-SIZE="8.0">{val}</FONT></TD>
+                </TR>
+            '''
+        
+    if res == "":
+        val = obj.get_id()
+        res = res + f'''
+            <TR>
+                <TD BGCOLOR="{color}" PORT="p0"><B>{val}</B></TD>
+            </TR>
+        '''
+
+    return f'''<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+        {res}
+        </TABLE>
+    >'''
+
+def cluster_label(obj, DRAW):
+    ''' html code for cluster header '''
+    draw = obj.Draw
+
+    res0 = ""
+
+    val = obj.get_icon()
+    if val:
+        if draw & DRAW.ICON:
+            res0 = res0 + f'''
+                <TD ROWSPAN="3"><IMG SRC="{val}"/></TD>
+            '''
+
+    val = obj.get_view()
+    if val:
+        if draw & DRAW.VIEW:
+            res0 = res0 + f'''
+                <TD {obj.get_href()}><B>{insert_line_breaks(val)}</B></TD>
+            '''
+
+    if res0 != "":
+        res0 = f'''
+        <TR>
+            {res0}
+        </TR>
+        '''
+
+    res1 = ""
+
+    if draw & DRAW.EXT:
+        val = obj.get_ext()
+        if val:
+            res1 = res1 + f'''
+            <TR>
+                <TD BGCOLOR="white"><FONT POINT-SIZE="12.0">{insert_line_breaks(val)}</FONT></TD>
+            </TR>
+            '''
+
+    val = obj.get_class_view()
+    if val:
+        if draw & DRAW.CLASS:
+            res1 = res1 + f'''
+                <TR>
+                    <TD><FONT POINT-SIZE="8.0">{val}</FONT></TD>
+                </TR>
+                '''
+
+    val = obj.get_id()
+    if val:
+        if draw & DRAW.ID:
+            res1 = res1 + f'''
+            <TR>
+                <TD><FONT POINT-SIZE="8.0">{val}</FONT></TD>
+            </TR>
+            '''
+
+    if res0 == "" and res1 == "":
+        val = obj.get_id()
+        res0 = res0 + f'''
+        <TR>
+            <TD PORT="p0"><B>{val}</B></TD>
+        </TR>
+    '''
+
+    return f'''<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4">
+            {res0}
+            {res1}
+        </TABLE>
+    >'''
+
+def list_label(list_view, listitems):
+    label = f'<TR><TD BGCOLOR="#A9DFBF"><B><FONT POINT-SIZE="9.0">{list_view}</FONT></B></TD></TR>\n'
+    draw_it = False
+    for list_item in listitems:
+        if list_item is None:
+            continue
+        draw_it = True
+        label += f'<TR><TD {list_item["href"]} BGCOLOR="white" PORT="{list_item["id"]}"><FONT POINT-SIZE="9.0">{insert_line_breaks(list_item["view"])}</FONT></TD></TR>\n'
+
+    if not draw_it:
+        return
+
+    label = f'''<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+        {label}
+        </TABLE>
+    >'''
+
+    return label
+
 def get_resource_path(path, file):
     with importlib.resources.path(path, file) as res_path:
         return str(res_path)
+
 
 class Drawing:
     ''' Class that provide drawing structure of nodes with parent, list, and links relations '''
