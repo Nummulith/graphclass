@@ -361,28 +361,29 @@ class Drawing:
 
         self.linked = None
 
-
-        # with open('Y3A\\render\\Y3A.txt', 'w') as file:
-        #     file.write(dot.source)
         return dot
     
     def source(self, name):
         return self.dot(name).source
 
-    def svg(self, name):
+    def svg(self, name, engine = "dot"):
+# engine:
+# dot (default) - используется для иерархической (directed) визуализации графов, лучше всего подходит
+#  для направленных графов. Движок строит граф по уровням, что делает его удобным для отображения деревьев
+#  и других структур с иерархией.
+# neato - использует алгоритм силового направления для расположения графа, подходящий для неориентированных графов.
+# fdp - также использует метод силового направления, но с другим подходом, более подходящий для плотных графов.
+# sfdp - оптимизированная версия fdp для масштабных графов.
+# twopi - рисует графы в радиальной раскладке. Удобен для графов, где один узел может быть центром,
+#  а остальные узлы расположены вокруг него по окружности.
+# circo - рисует графы с циркулярной раскладкой. Подходит для круговых графов и рёбер с кольцевыми структурами.
+# osage - предназначен для мультиграфов, где есть несколько рёбер между одними и теми же парами узлов.
+# patchwork - строит графы в виде вложенных прямоугольников, подходит для работы с деревьями.
+
         dot = self.dot(name)
+        dot.engine = engine
 
         try:
-            # dot.render(name, format='png', cleanup=True)
-            # dot.render(name, format='svg', cleanup=True)
-
-            #pixmap = QPixmap("Drawing.png")
-            #pixmap_item = QGraphicsPixmapItem(pixmap)
-            #Graph.scene().addItem(pixmap_item)
-            #Graph.fitInView(Graph.scene().sceneRect()) # Autoscaling
-
-            dot.engine = 'fdp'
-
             svg_str = dot.pipe(format='svg').decode('utf-8')
         except Exception as e:
             print(f"Draw error: {str(e)}")
@@ -392,18 +393,18 @@ class Drawing:
 
         return svg_str
 
-    def html(self, name):
-        svg_str = self.svg(name)
+    def html(self, name, engine = "dot", reload_time=0):
+        svg_str = self.svg(name, engine)
 
         path = get_resource_path('graphclass.template', 'html.j2')
         with open(path, 'r') as file:
             template_str = file.read()
         template = Template(template_str)
 
-        output = template.render(content=svg_str)
+        output = template.render(content=svg_str, name=name, reload_time=reload_time)
         return output
 
-    def png(self, name, png_path):
-        svg_content = self.svg(name)
+    def png(self, name, png_path, engine = "dot"):
+        svg_content = self.svg(name, engine)
         graph = Source(svg_content, format='png')
         graph.render(filename=png_path, cleanup=True)
