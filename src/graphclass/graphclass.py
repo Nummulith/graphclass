@@ -393,8 +393,11 @@ class Drawing:
 
         return svg_str
 
-    def html(self, name, engine = "dot", reload_time=0):
+    def html(self, name, engine = "dot", reload_time=0, html_wrap=True):
         svg_str = self.svg(name, engine)
+
+        if not html_wrap:
+            return svg_str
 
         path = get_resource_path('graphclass.template', 'html.j2')
         with open(path, 'r') as file:
